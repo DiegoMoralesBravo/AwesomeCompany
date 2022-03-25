@@ -3,7 +3,6 @@
 }
 
 nav {
-    position: fixed;
     width: 100%;
     display: flex;
     top: 0px;
@@ -53,4 +52,12 @@ footer {
 }
 p.footerP {
     padding: 0px;
+}
+
+.contenedorHome{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
