@@ -6,6 +6,7 @@ const express = require('express');
 const exphbs = require('express-handlebars');
 const app = express();
 
+
 // Create connection to database
 var config = {
   server: 'localhost',
@@ -27,10 +28,33 @@ connection.on('connect', function(err) {
   if (err) {
     console.log(err);
   } else {
-    console.log('Connected');
+    console.log('Connectado');
+    executeStatement();
   }
 });
+
 connection.connect();
+
+
+
+function executeStatement() {
+  request = new Request("select fullName from awesome_table", function(err, rowCount) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(rowCount + ' rows');
+    }
+  });
+
+  request.on('row', function(columns) {
+    columns.forEach(function(column) {
+      console.log(column.value);
+    });
+  });
+
+  connection.execSql(request);
+}
+
 
 app.engine('hbs', exphbs.engine({
     defaultLayout: 'main',
@@ -42,6 +66,7 @@ app.set('view engine', 'hbs');
 app.use(express.static(path.join(__dirname, '/public')));
 
 
+
 app.get('/', (req, res) => {
     res.render('home');
 });
@@ -51,6 +76,7 @@ app.get('/register', (req, res) => {
 });
 
 app.get('/database', (req, res) => {
+
     res.render('database');
 });
 

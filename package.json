@@ -13,7 +13,7 @@
     "async": "^3.2.3",
     "express": "^4.17.3",
     "express-handlebars": "^6.0.3",
-    "mysql": "^2.18.1",
-    "tedious": "^14.3.0"
+    "mssql": "^8.0.2",
+    "mysql": "^2.18.1"
   }
 }
