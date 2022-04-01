@@ -1,62 +1,11 @@
-// var Connection = require('tedious').Connection;
-// var Request = require('tedious').Request;
-// var TYPES = require('tedious').TYPES;
 const { Sequelize, Datatypes} = require('sequelize');
 var DataTypes = require('sequelize/lib/data-types');
 const path = require('path');
 const express = require('express');
 const exphbs = require('express-handlebars');
 const app = express();
+app.use(express.json());
 
-//
-// // Create connection to database
-// var config = {
-//   server: 'localhost',
-//   authentication: {
-//       type: 'default',
-//       options: {
-//           userName: 'SA', // update me
-//           password: 'Popohq14' // update me
-//       }
-//   },
-//   options: {
-//       trustServerCertificate: true,
-//       database: 'AwesomeCompany'
-//   }
-// }
-// var connection = new Connection(config);
-// // Attempt to connect and execute queries if connection goes through
-// connection.on('connect', function(err) {
-//   if (err) {
-//     console.log(err);
-//   } else {
-//     console.log('Connectado');
-//     executeStatement();
-//   }
-// });
-//
-// connection.connect();
-//
-//
-//
-// function executeStatement() {
-//   request = new Request("select fullName from awesome_table", function(err, rowCount) {
-//     if (err) {
-//       console.log(err);
-//     } else {
-//       console.log(rowCount + ' rows');
-//     }
-//   });
-//
-//   request.on('row', function(columns) {
-//     columns.forEach(function(column) {
-//       console.log(column.value);
-//     });
-//   });
-//
-//   connection.execSql(request);
-// }
-//
 
 
 const sequelize = new Sequelize('AwesomeCompany', 'SA', 'Popohq14', {
@@ -65,7 +14,6 @@ const sequelize = new Sequelize('AwesomeCompany', 'SA', 'Popohq14', {
 });
 
 const AwesomeTableModel = sequelize.define('AwesomeTableModel', {
-  // Model attributes are defined here
   id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -74,7 +22,7 @@ const AwesomeTableModel = sequelize.define('AwesomeTableModel', {
   fullName: {
     type: DataTypes.STRING,
   },
-  birthDay: {
+  birthDate: {
     type: DataTypes.DATEONLY
   },
   phone: {
@@ -85,39 +33,13 @@ const AwesomeTableModel = sequelize.define('AwesomeTableModel', {
   },
   salary: {
     type: DataTypes.INTEGER
-  },
-  maritalStatus: {
+},
+    maritialStatus: {
     type: DataTypes.STRING
   }
 });
 
-
-    try {
-      sequelize.authenticate();
-      console.log('Connection has been established successfully.');
-      AwesomeTableModel.sync({ alter: true })
-      const jane = AwesomeTableModel.create({ fullName: "Jane" });
-    } catch (error) {
-      console.error('Unable to connect to the database:', error);
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+AwesomeTableModel.sync({ alter: true });
 
 app.engine('hbs', exphbs.engine({
     defaultLayout: 'main',
@@ -141,6 +63,25 @@ app.get('/database', (req, res) => {
     res.render('database');
 });
 
+app.post("/api", (req, res) => {
+    console.log('Insertar');
+    try{
+        AwesomeTableModel.create(req.body);
+        res.send('Exito!')
+    } catch(error){
+        console.log('Error al insertar datos',error);
+    }
+})
+
+app.get("/api", (req, res) => {
+    console.log('i receive a POST request');
+
+              AwesomeTableModel.findAll()
+              .then(variable => console.log("All users:", JSON.stringify(variable, null, 2)));
+
+    var tryFetch = {myString: 'I am working fetch'};
+    res.json(tryFetch)
+})
 
 app.listen(3000, () => {
     console.log('The web server has started on port 3000');
